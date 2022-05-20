@@ -15,31 +15,21 @@ var (
 
 func StringSum(input string) (output string, err error) {
 	input = strings.ReplaceAll(input, " ", "")
-	r := []rune(input)
-	sum := 0
-	operandsCount := 0
-	numbersRegexp := regexp.MustCompile(`\d`)
-	if len(r) == 0 {
-		return "", fmt.Errorf("Error while calculating sum: %w", errorEmptyInput)
+	if len(input) == 0 {
+		return "", fmt.Errorf("error while calculating sum: %w", errorEmptyInput)
 	}
-	for i := 0; i < len(r); i++ {
-		num, _ := strconv.Atoi(string(r[i]))
-		if operandsCount > 2 {
-			return "", fmt.Errorf("Error while calculating sum: %w", errorNotTwoOperands)
-		} else if string(r[i]) == "-" {
-			i++
-			num, _ := strconv.Atoi(string(r[i]))
-			sum -= num
-			operandsCount += 1
-		} else if string(r[i]) == "+" {
-			i++
-			num, _ := strconv.Atoi(string(r[i]))
-			sum += num
-			operandsCount += 1
-		} else if numbersRegexp.MatchString(string(r[i])) {
-			sum += num
-			operandsCount += 1
+	sum := 0
+	r := regexp.MustCompile(`[-+](\w+)|(\w+)`)
+	s := r.FindAllString(input, -1)
+	if len(s) > 2 || len(s) <= 1 {
+		return "", fmt.Errorf("error while calculating sum: %w", errorNotTwoOperands)
+	}
+	for i := 0; i < len(s); i++ {
+		num, err := strconv.Atoi(s[i])
+		if err != nil {
+			return "", err
 		}
+		sum += num
 	}
 	output = strconv.Itoa(sum)
 	return output, nil
