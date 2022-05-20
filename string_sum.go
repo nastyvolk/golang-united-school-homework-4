@@ -28,7 +28,7 @@ func StringSum(input string) (output string, err error) {
 		num, err := strconv.Atoi(s[i])
 		if err != nil {
 			e := err.(*strconv.NumError)
-			return "", fmt.Errorf("error while calculating sum: %w", e.Err)
+			return "", fmt.Errorf("error while calculating sum: %w", e)
 		}
 		sum += num
 	}
